@@ -7,6 +7,10 @@ class dconf_profile {
   file{$dconf_directories:
     ensure => directory,
   } -> 
+  
+  package{'dconf-cli':
+    ensure => present,
+  }
 
   file{'/etc/dconf/profile/user':
     ensure => present,

@@ -17,4 +17,8 @@ class dconf_profile {
     source => 'puppet:///modules/dconf_profile/dconf_profile',
   }
 
+  exec { '/usr/bin/dconf update':
+    refreshonly => true,
+  }
+
 }

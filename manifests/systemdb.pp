@@ -12,6 +12,10 @@ define dconf_profile::systemdb(
 			section		=> $schema,
 			setting		=> $key,
 			value		=> $value,
+		}~>
+		exec { 'touch /etc/dconf/db/local.d':
+			# Workaround for https://gitlab.gnome.org/GNOME/dconf/issues/11 .
+			refreshonly	=> true,
 			notify		=> Exec['/usr/bin/dconf update'],
 		}
 	}

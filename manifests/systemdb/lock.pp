@@ -15,11 +15,14 @@ define dconf_profile::systemdb::lock(
 		group		=> root,
 		mode		=> 0644,
 		content		=> template("${module_name}/lock.erb"),
-	}~>
-	exec { 'touch /etc/dconf/db/local.d/locks':
-		# Workaround for https://gitlab.gnome.org/GNOME/dconf/issues/11 .
-		refreshonly	=> true,
-		notify		=> Exec['/usr/bin/dconf update'],
+		notify		=> Exec['touch /etc/dconf/db/local.d/locks'],
 	}
+	# Workaround for https://gitlab.gnome.org/GNOME/dconf/issues/11 .
+	ensure_resource('exec', 'touch /etc/dconf/db/local.d/locks',
+		{
+			refreshonly	=> true,
+			notify		=> Exec['/usr/bin/dconf update'],
+		}
+	)
 
 }

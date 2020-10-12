@@ -19,6 +19,7 @@ class dconf_profile {
 
   exec { '/usr/bin/dconf update':
     refreshonly => true,
+    require     => Package['dconf-cli'],
   }
 
 }

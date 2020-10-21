@@ -9,15 +9,20 @@ define dconf_profile::systemdb::lock(
 	else {
 		fail('dconf_profile::systemdb::lock: keys array empty')
 	}
-	$filename = "/etc/dconf/db/local.d/locks/$lockfilename"
-	validate_absolute_path($filename)
 	
-	file { $filename:
+	file { "/etc/dconf/db/local.d/locks/${lockfilename}":
 		owner		=> root,
 		group		=> root,
 		mode		=> '0644',
 		content		=> template("${module_name}/lock.erb"),
-		notify		=> Exec['/usr/bin/dconf update'],
+		notify		=> Exec['touch /etc/dconf/db/local.d/locks'],
 	}
+	# Workaround for https://gitlab.gnome.org/GNOME/dconf/issues/11 .
+	ensure_resource('exec', 'touch /etc/dconf/db/local.d/locks',
+		{
+			refreshonly	=> true,
+			notify		=> Exec['/usr/bin/dconf update'],
+		}
+	)
 
 }

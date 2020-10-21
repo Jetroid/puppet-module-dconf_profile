@@ -12,8 +12,15 @@ define dconf_profile::systemdb(
 			section		=> $schema,
 			setting		=> $key,
 			value		=> $value,
-			notify		=> Exec['/usr/bin/dconf update'],
+			notify		=> Exec['touch /etc/dconf/db/local.d'],
 		}
+		# Workaround for https://gitlab.gnome.org/GNOME/dconf/issues/11 .
+		ensure_resource('exec', 'touch /etc/dconf/db/local.d',
+			{
+				refreshonly	=> true,
+				notify		=> Exec['/usr/bin/dconf update'],
+			}
+		)
 	}
 	else {
 		fail('dconf_profile::systemdb: At least one parameter is undefined')

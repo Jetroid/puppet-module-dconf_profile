@@ -13,7 +13,7 @@ define dconf_profile::systemdb::lock(
 	file { "/etc/dconf/db/local.d/locks/${lockfilename}":
 		owner		=> root,
 		group		=> root,
-		mode		=> 0644,
+		mode		=> '0644',
 		content		=> template("${module_name}/lock.erb"),
 		notify		=> Exec['touch /etc/dconf/db/local.d/locks'],
 	}
